@@ -20,6 +20,7 @@ import javax.inject.Inject
 * and the second line will not be reached at all.
 * */
 
+// TODO: mark the unused methods because using AuthUI
 
 class AuthenticationServiceImpl @Inject constructor() :
     AuthenticationService {

@@ -5,9 +5,7 @@ import androidx.compose.material3.SnackbarHostState
 
 
 /**
- * Utility for posting messages from ViewModels, etc.
- * It init message as StateFlow
- * Should be collected in AppState and post to snackbarHost
+ * Utility for accessing snackbarHostState from ViewModels, etc.
  */
 
 

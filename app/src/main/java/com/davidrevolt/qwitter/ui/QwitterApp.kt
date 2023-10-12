@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import com.davidrevolt.qwitter.R
 import com.davidrevolt.qwitter.core.auth.AuthenticationService
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitor
 import com.davidrevolt.qwitter.core.data.utils.snackbarmanager.SnackbarManager
@@ -39,7 +40,7 @@ fun QwitterApp(
 ) {
 
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
-    val notConnectedMessage = stringResource(com.davidrevolt.qwitter.core.designsystem.R.string.not_connected)
+    val notConnectedMessage = stringResource(R.string.not_connected)
     LaunchedEffect(isOffline) {
         if (isOffline) {
             snackbarManager.showSnackbar(

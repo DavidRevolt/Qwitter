@@ -2,6 +2,10 @@ package com.davidrevolt.qwitter.core.auth
 
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Service to manage the auth for users(not the profile info which saved to Firestore DB(or others))
+ * */
+
 interface AuthenticationService {
 
     val currentUserId: String?
