@@ -17,4 +17,5 @@ abstract class DataModule {
 
     @Binds
     abstract fun bindsNetworkMonitorService(networkMonitorImpl: NetworkMonitorImpl): NetworkMonitor
+
 }

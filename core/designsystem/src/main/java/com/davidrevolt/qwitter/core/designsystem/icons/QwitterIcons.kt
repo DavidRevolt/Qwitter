@@ -22,13 +22,15 @@ object QwitterIcons {
     val Check = Icons.Rounded.Check
     val Close = Icons.Rounded.Close
     val MoreVert = Icons.Default.MoreVert
-    val Person = Icons.Rounded.Person
     val Search = Icons.Rounded.Search
     val Settings = Icons.Rounded.Settings
     val Email = Icons.Rounded.Email
     val Visibility_On = Icons.Rounded.Visibility
     val Visibility_Off = Icons.Rounded.VisibilityOff
     val Lock = Icons.Rounded.Lock
+
+    val Empty = Icons.Rounded
+    val Person = Icons.Rounded.Person
     val Home = Icons.Rounded.Home
     val Login = Icons.AutoMirrored.Rounded.Login
 }

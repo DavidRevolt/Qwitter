@@ -23,7 +23,7 @@ fun QwitterNavigation(
         startDestination = startDestination
     ) {
         loginScreen(onSuccessLogin = { appState.clearBackStackAndNavigate(TopLevelDestination.HOME) })
-        homeScreen()
+        homeScreen(onProfileClick ={})
     }
 }
 

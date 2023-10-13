@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -39,26 +38,26 @@ fun QwitterApp(
     )
 ) {
 
+    val snackbarHostState = snackbarManager.snackbarHostState
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
     val notConnectedMessage = stringResource(R.string.not_connected)
+
+
+    //TODO: should move all to Qwitter Background
     LaunchedEffect(isOffline) {
         if (isOffline) {
-            snackbarManager.showSnackbar(
+            snackbarHostState.showSnackbar(
                 message = notConnectedMessage,
                 duration = SnackbarDuration.Indefinite,
             )
         }
     }
 
-    //TODO: should move to Qwitter Background
     Scaffold(
         containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         snackbarHost = {
-            SnackbarHost(
-                snackbarManager.snackbarHostState,
-                modifier = Modifier.safeDrawingPadding()
-            )
+            SnackbarHost(snackbarHostState)
         },
         bottomBar = {
             if (appState.shouldShowBottomBar) {
@@ -74,11 +73,11 @@ fun QwitterApp(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .safeDrawingPadding()
         ) {
             QwitterNavigation(
                 appState = appState,
-                authenticationService = authenticationService)
+                authenticationService = authenticationService
+            )
         }
     }
 }
@@ -94,7 +93,7 @@ private fun QwitterBottomBar(
     QwitterNavigationBar(
         modifier = modifier
     ) {
-        destinations.filter{ it != TopLevelDestination.LOGIN}.forEach { destination ->
+        destinations.filter { it != TopLevelDestination.LOGIN }.forEach { destination ->
             val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)
             QwitterNavigationBarItem(
                 selected = selected,
@@ -111,7 +110,8 @@ private fun QwitterBottomBar(
                         contentDescription = null,
                     )
                 },
-                label = { Text(stringResource(destination.iconTextId)) }
+                label = { Text(stringResource(destination.iconTextId)) },
+                alwaysShowLabel = true
             )
         }
     }
