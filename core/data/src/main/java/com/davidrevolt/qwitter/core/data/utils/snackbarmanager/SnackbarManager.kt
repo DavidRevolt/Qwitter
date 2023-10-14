@@ -11,7 +11,8 @@ import androidx.compose.material3.SnackbarHostState
 
 interface SnackbarManager {
 
-    val snackbarHostState: SnackbarHostState
+     val snackbarHostState: SnackbarHostState
+
     suspend fun showSnackbar(
         message: String,
         action: String? = null,

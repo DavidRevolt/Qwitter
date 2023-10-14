@@ -42,8 +42,7 @@ class AuthenticationServiceImpl @Inject constructor() :
     }
 
     // callbackFlow is a flow builder that lets you convert callback-based APIs into flows
-    // can used for getting authentication state
-    // help responds to changes in the user's sign-in state at runtime
+    // can used for getting authentication state, responds to changes in the user's sign-in state at runtime
     override val currentUser: Flow<User>
         get() = callbackFlow {
             val listener =

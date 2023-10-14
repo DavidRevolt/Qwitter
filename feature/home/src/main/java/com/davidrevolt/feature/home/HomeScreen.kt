@@ -1,5 +1,6 @@
 package com.davidrevolt.feature.home
 
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -32,10 +33,9 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         QwitterTopAppBar(
-            title = { Text("X") },
             profileIcon = QwitterIcons.Person,
             onProfileClick = {},
-            scrollBehavior= scrollBehavior
+            scrollBehavior = scrollBehavior
         )
         Text(text = "In Home Screen", fontSize = 16.sp)
     }

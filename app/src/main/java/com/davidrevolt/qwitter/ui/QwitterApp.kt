@@ -19,7 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.davidrevolt.qwitter.R
-import com.davidrevolt.qwitter.core.auth.AuthenticationService
+import com.davidrevolt.qwitter.core.data.repository.UserRepository
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitor
 import com.davidrevolt.qwitter.core.data.utils.snackbarmanager.SnackbarManager
 import com.davidrevolt.qwitter.core.designsystem.components.QwitterNavigationBar
@@ -29,18 +29,18 @@ import com.davidrevolt.qwitter.navigation.TopLevelDestination
 
 @Composable
 fun QwitterApp(
-    authenticationService: AuthenticationService,
+    userRepository: UserRepository,
     networkMonitor: NetworkMonitor,
     snackbarManager: SnackbarManager,
     appState: QwitterAppState = rememberQwitterAppState(
-        authenticationService = authenticationService,
+        userRepository = userRepository,
         networkMonitor = networkMonitor
     )
 ) {
 
     val snackbarHostState = snackbarManager.snackbarHostState
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
-    val notConnectedMessage = stringResource(R.string.not_connected)
+    val notConnectedMessage = stringResource(R.string.no_internet_connection)
 
 
     //TODO: should move all to Qwitter Background
@@ -76,7 +76,7 @@ fun QwitterApp(
         ) {
             QwitterNavigation(
                 appState = appState,
-                authenticationService = authenticationService
+                userRepository = userRepository
             )
         }
     }

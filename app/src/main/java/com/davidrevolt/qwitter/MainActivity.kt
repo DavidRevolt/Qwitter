@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
-import com.davidrevolt.qwitter.core.auth.AuthenticationService
+import com.davidrevolt.qwitter.core.data.repository.UserRepository
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitor
 import com.davidrevolt.qwitter.core.data.utils.snackbarmanager.SnackbarManager
 import com.davidrevolt.qwitter.ui.QwitterApp
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var authenticationService: AuthenticationService
+    lateinit var userRepository: UserRepository
 
     @Inject
     lateinit var networkMonitor: NetworkMonitor
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
             Locale.setDefault(locale)
 
             QwitterTheme {
-                QwitterApp(authenticationService, networkMonitor, snackbarManager)
+                QwitterApp(userRepository, networkMonitor, snackbarManager)
             }
         }
     }

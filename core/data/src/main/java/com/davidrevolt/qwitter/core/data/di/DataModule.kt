@@ -1,5 +1,7 @@
 package com.davidrevolt.qwitter.core.data.di
 
+import com.davidrevolt.qwitter.core.data.repository.UserRepository
+import com.davidrevolt.qwitter.core.data.repository.UserRepositoryImpl
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitor
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitorImpl
 import com.davidrevolt.qwitter.core.data.utils.snackbarmanager.SnackbarManager
@@ -18,4 +20,6 @@ abstract class DataModule {
     @Binds
     abstract fun bindsNetworkMonitorService(networkMonitorImpl: NetworkMonitorImpl): NetworkMonitor
 
+    @Binds
+    abstract fun bindsUserRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
 }

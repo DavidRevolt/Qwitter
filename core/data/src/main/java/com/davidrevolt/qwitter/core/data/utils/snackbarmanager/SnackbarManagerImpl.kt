@@ -7,14 +7,18 @@ import javax.inject.Inject
 
 class SnackbarManagerImpl @Inject constructor() : SnackbarManager {
 
-    override val snackbarHostState = SnackbarHostState()
+    private val _snackbarHostState = SnackbarHostState()
+
+
+    override val snackbarHostState: SnackbarHostState
+        get() = _snackbarHostState
 
     override suspend fun showSnackbar(
         message: String,
         action: String?,
         duration: SnackbarDuration
     ): Boolean {
-        return snackbarHostState.showSnackbar(
+        return _snackbarHostState.showSnackbar(
             message = message,
             actionLabel = action,
             duration = SnackbarDuration.Short,

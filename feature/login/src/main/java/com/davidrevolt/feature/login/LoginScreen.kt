@@ -25,10 +25,11 @@ fun LoginScreen(
 ) {
 
     val signInIntent = viewModel::provideSignInIntent
+    val showSnackbar = viewModel::showSnackbar
     val signInLauncher = rememberLauncherForActivityResult(
         FirebaseAuthUIActivityResultContract()
     ) { res ->
-        signInResult(res, onSuccessLogin)
+        signInResult(res, onSuccessLogin, showSnackbar)
     }
 
     Column(
@@ -54,11 +55,18 @@ fun LoginScreen(
 
 }
 
-private fun signInResult(result: FirebaseAuthUIAuthenticationResult, onSuccessLogin: () -> Unit) {
-    val response = result.idpResponse
+private fun signInResult(
+    result: FirebaseAuthUIAuthenticationResult,
+    onSuccessLogin: () -> Unit,
+    showSnackbar: (String) -> Unit
+) {
+
     if (result.resultCode == ComponentActivity.RESULT_OK) {
         onSuccessLogin()
     } else {
-        // TODO: add crashlytics
+        val message = result.idpResponse?.error?.message
+        if (message != null) {
+            showSnackbar(message)
+        }
     }
 }
