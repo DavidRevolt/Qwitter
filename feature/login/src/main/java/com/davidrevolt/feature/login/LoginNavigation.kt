@@ -12,11 +12,13 @@ fun NavController.navigateToLogin(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.loginScreen(
-    onSuccessLogin: () -> Unit
+    onSuccessLogin: () -> Unit,
+    onShowSnackbar: suspend (String, String?) -> Boolean
 ) {
     composable(route = LOGIN_ROUTE) {
         LoginScreen(
-            onSuccessLogin = onSuccessLogin
+            onSuccessLogin = onSuccessLogin,
+            onShowSnackbar = onShowSnackbar
         )
     }
 }

@@ -16,8 +16,8 @@ dependencyResolutionManagement {
 rootProject.name = "Qwitter"
 include(":app")
 include(":core:designsystem")
-include(":core:auth")
 include(":feature:login")
 include(":feature:home")
 include(":core:data")
 include(":core:model")
+include(":core:network")

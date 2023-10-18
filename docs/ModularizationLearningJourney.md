@@ -1,7 +1,8 @@
-# Modularization learning journey
+# Setup Requirement
 
-In this learning journey you will learn about modularization, and the modularization strategy used
-to create the modules in the app.
+1. Open new Firebase project.
+2. Enable Firebase Auth and enable only Google Auth [Code located in core:data:utils:authentication.
+3. Enable Firebase Cloud Storage. 
 
 
 ## Overview

@@ -21,7 +21,7 @@ class SnackbarManagerImpl @Inject constructor() : SnackbarManager {
         return _snackbarHostState.showSnackbar(
             message = message,
             actionLabel = action,
-            duration = SnackbarDuration.Short,
+            duration = duration,
         ) == SnackbarResult.ActionPerformed
     }
 }

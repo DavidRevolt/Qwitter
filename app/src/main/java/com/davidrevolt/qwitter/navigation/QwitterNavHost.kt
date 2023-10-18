@@ -6,24 +6,25 @@ import com.davidrevolt.feature.home.HOME_ROUTE
 import com.davidrevolt.feature.home.homeScreen
 import com.davidrevolt.feature.login.LOGIN_ROUTE
 import com.davidrevolt.feature.login.loginScreen
-import com.davidrevolt.qwitter.core.data.repository.UserRepository
+import com.davidrevolt.qwitter.core.data.utils.authentication.AuthenticationService
 import com.davidrevolt.qwitter.ui.QwitterAppState
 
 
 @Composable
 fun QwitterNavigation(
     appState: QwitterAppState,
-    userRepository: UserRepository
+    onShowSnackbar: suspend (String, String?) -> Boolean,
+    authenticationService: AuthenticationService
 ) {
     val navController = appState.navController
-    val startDestination = if(userRepository.userLoggedIn) HOME_ROUTE else LOGIN_ROUTE
+    val startDestination = if(authenticationService.userLoggedIn) HOME_ROUTE else LOGIN_ROUTE
 
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        loginScreen(onSuccessLogin = { appState.clearBackStackAndNavigate(TopLevelDestination.HOME) })
+        loginScreen(onSuccessLogin = { appState.clearBackStackAndNavigate(TopLevelDestination.HOME) },
+            onShowSnackbar = onShowSnackbar,)
         homeScreen(onProfileClick ={})
     }
 }
-

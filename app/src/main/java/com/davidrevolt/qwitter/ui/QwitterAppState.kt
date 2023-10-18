@@ -13,7 +13,7 @@ import com.davidrevolt.feature.home.HOME_ROUTE
 import com.davidrevolt.feature.home.navigateToHome
 import com.davidrevolt.feature.login.LOGIN_ROUTE
 import com.davidrevolt.feature.login.navigateToLogin
-import com.davidrevolt.qwitter.core.data.repository.UserRepository
+import com.davidrevolt.qwitter.core.data.utils.authentication.AuthenticationService
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitor
 import com.davidrevolt.qwitter.navigation.TopLevelDestination
 import kotlinx.coroutines.CoroutineScope
@@ -24,20 +24,20 @@ import kotlinx.coroutines.flow.stateIn
 
 @Composable
 fun rememberQwitterAppState(
-    userRepository: UserRepository,
+    authenticationService: AuthenticationService,
     networkMonitor: NetworkMonitor,
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ): QwitterAppState {
     return remember(
         networkMonitor,
-        userRepository,
+        authenticationService,
         navController,
         coroutineScope
     ) {
         QwitterAppState(
             networkMonitor,
-            userRepository,
+            authenticationService,
             navController,
             coroutineScope,
         )
@@ -46,7 +46,7 @@ fun rememberQwitterAppState(
 
 class QwitterAppState(
     networkMonitor: NetworkMonitor,
-    userRepository: UserRepository,
+    authenticationService: AuthenticationService,
     val navController: NavHostController,
     coroutineScope: CoroutineScope
 ) {
@@ -63,12 +63,12 @@ class QwitterAppState(
 
 
     // Auth
-    val currentUser = userRepository.currentUser
+/*    val currentUser = authenticationService.currentUser
         .stateIn(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = null,
-        )
+        )*/
 
 
     // Navigation

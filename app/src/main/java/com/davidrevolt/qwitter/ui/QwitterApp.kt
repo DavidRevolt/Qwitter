@@ -8,6 +8,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,7 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.davidrevolt.qwitter.R
-import com.davidrevolt.qwitter.core.data.repository.UserRepository
+import com.davidrevolt.qwitter.core.data.utils.authentication.AuthenticationService
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitor
 import com.davidrevolt.qwitter.core.data.utils.snackbarmanager.SnackbarManager
 import com.davidrevolt.qwitter.core.designsystem.components.QwitterNavigationBar
@@ -29,11 +30,11 @@ import com.davidrevolt.qwitter.navigation.TopLevelDestination
 
 @Composable
 fun QwitterApp(
-    userRepository: UserRepository,
+    authenticationService: AuthenticationService,
     networkMonitor: NetworkMonitor,
     snackbarManager: SnackbarManager,
     appState: QwitterAppState = rememberQwitterAppState(
-        userRepository = userRepository,
+        authenticationService = authenticationService,
         networkMonitor = networkMonitor
     )
 ) {
@@ -76,7 +77,14 @@ fun QwitterApp(
         ) {
             QwitterNavigation(
                 appState = appState,
-                userRepository = userRepository
+                onShowSnackbar = { message, action ->
+                    snackbarHostState.showSnackbar(
+                        message = message,
+                        actionLabel = action,
+                        duration = SnackbarDuration.Short,
+                    ) == SnackbarResult.ActionPerformed
+                },
+                authenticationService = authenticationService
             )
         }
     }
