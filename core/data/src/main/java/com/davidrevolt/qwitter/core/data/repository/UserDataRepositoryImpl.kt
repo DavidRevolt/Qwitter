@@ -25,7 +25,7 @@ class UserDataRepositoryImpl @Inject constructor(private val firebaseAuth: Fireb
                         User(
                             it.uid,
                             if (it.displayName != null) it.displayName!! else "",
-                            it.photoUrl
+                            if (it.photoUrl != null) it.photoUrl!! else Uri.EMPTY
                         )
                     } ?: User())
                 }

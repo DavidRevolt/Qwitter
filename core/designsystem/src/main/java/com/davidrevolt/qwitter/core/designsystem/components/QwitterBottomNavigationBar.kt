@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun QwitterNavigationBar(
+fun QwitterBottomNavigationBar(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit,
 ) {

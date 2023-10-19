@@ -21,8 +21,7 @@ import com.davidrevolt.qwitter.core.designsystem.drawables.qwitter_logo
 @Composable
 fun QwitterTopAppBar(
     title: @Composable () -> Unit = appBarLogo,
-    profileIcon: ImageVector,
-    profileIconContentDescription: String?= null,
+    profilePicture: @Composable () -> Unit,
     actionIcon: ImageVector? = null,
     actionIconContentDescription: String? = null,
     onProfileClick: () -> Unit = {},
@@ -33,16 +32,12 @@ fun QwitterTopAppBar(
 ) {
     CenterAlignedTopAppBar(
         title = title,
-        navigationIcon = {
-            IconButton(onClick = onProfileClick) {
-                Icon(
-                    imageVector = profileIcon,
-                    contentDescription = profileIconContentDescription,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                )
-            }
-        },
+        navigationIcon =
+            // Profile Pic
+            profilePicture
+        ,
         actions = {
+            // Settings Button
             if(actionIcon != null){
                 IconButton(onClick = onActionClick) {
                     Icon(

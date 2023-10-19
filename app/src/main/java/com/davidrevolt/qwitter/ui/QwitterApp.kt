@@ -23,7 +23,7 @@ import com.davidrevolt.qwitter.R
 import com.davidrevolt.qwitter.core.data.utils.authentication.AuthenticationService
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitor
 import com.davidrevolt.qwitter.core.data.utils.snackbarmanager.SnackbarManager
-import com.davidrevolt.qwitter.core.designsystem.components.QwitterNavigationBar
+import com.davidrevolt.qwitter.core.designsystem.components.QwitterBottomNavigationBar
 import com.davidrevolt.qwitter.core.designsystem.components.QwitterNavigationBarItem
 import com.davidrevolt.qwitter.navigation.QwitterNavigation
 import com.davidrevolt.qwitter.navigation.TopLevelDestination
@@ -98,7 +98,7 @@ private fun QwitterBottomBar(
     currentDestination: NavDestination?,
     modifier: Modifier = Modifier,
 ) {
-    QwitterNavigationBar(
+    QwitterBottomNavigationBar(
         modifier = modifier
     ) {
         destinations.filter { it != TopLevelDestination.LOGIN }.forEach { destination ->
