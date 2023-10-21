@@ -29,7 +29,7 @@ object QwitterIcons {
     val Visibility_Off = Icons.Rounded.VisibilityOff
     val Lock = Icons.Rounded.Lock
 
-    val Empty = Icons.Rounded
+
     val Person = Icons.Rounded.Person
     val Home = Icons.Rounded.Home
     val Login = Icons.AutoMirrored.Rounded.Login

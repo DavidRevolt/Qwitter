@@ -17,6 +17,15 @@ class UserDataRepositoryImpl @Inject constructor(private val firebaseAuth: Fireb
 
     // callbackFlow is a flow builder that lets you convert callback-based APIs into flows
     // can used for getting authentication state, responds to changes in the user's sign-in state at runtime
+    /**
+     * Flow Update only when:
+     * Right after the listener has been registered
+     * When a user is signed in
+     * When the current user is signed out
+     * When the current user changes
+     * Flow doesn't update on user profile updates
+     */
+
     override val currentUser: Flow<User>
         get() = callbackFlow {
             val listener =
@@ -33,11 +42,13 @@ class UserDataRepositoryImpl @Inject constructor(private val firebaseAuth: Fireb
             awaitClose { firebaseAuth.removeAuthStateListener(listener) }
         }
 
-    override  suspend fun updateDisplayName(displayName: String) {
+    override suspend fun updateDisplayName(displayName: String) {
+        //  throw RuntimeException()
         val profileUpdates = UserProfileChangeRequest.Builder()
             .setDisplayName(displayName)
             .build()
         firebaseAuth.currentUser?.updateProfile(profileUpdates)
+
     }
 
     override suspend fun uploadProfilePicture(photoUri: Uri) {

@@ -5,5 +5,5 @@ import android.net.Uri
 data class User(
     val uid: String = "",
     val displayName :String = "", // Gmail full name
-    val profilePicture: Uri = Uri.EMPTY, // Gmail profile pic
+    val profilePictureUri: Uri = Uri.EMPTY, // Gmail profile pic
 )

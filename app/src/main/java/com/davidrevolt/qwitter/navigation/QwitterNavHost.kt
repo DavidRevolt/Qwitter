@@ -7,6 +7,8 @@ import com.davidrevolt.feature.home.homeScreen
 import com.davidrevolt.feature.login.LOGIN_ROUTE
 import com.davidrevolt.feature.login.loginScreen
 import com.davidrevolt.qwitter.core.data.utils.authentication.AuthenticationService
+import com.davidrevolt.qwitter.core.editprofile.editProfileScreen
+import com.davidrevolt.qwitter.core.editprofile.navigateToEditProfile
 import com.davidrevolt.qwitter.ui.QwitterAppState
 
 
@@ -23,8 +25,9 @@ fun QwitterNavigation(
         navController = navController,
         startDestination = startDestination
     ) {
-        loginScreen(onSuccessLogin = { appState.clearBackStackAndNavigate(TopLevelDestination.HOME) },
+        loginScreen(onSuccessLogin = { appState.onAuthStateChangeNavigation() },
             onShowSnackbar = onShowSnackbar,)
-        homeScreen(onProfileClick ={})
+        homeScreen(onProfileClick =  navController::navigateToEditProfile )
+        editProfileScreen()
     }
 }

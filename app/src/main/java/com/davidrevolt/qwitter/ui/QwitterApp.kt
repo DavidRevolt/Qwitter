@@ -101,7 +101,7 @@ private fun QwitterBottomBar(
     QwitterBottomNavigationBar(
         modifier = modifier
     ) {
-        destinations.filter { it != TopLevelDestination.LOGIN }.forEach { destination ->
+        destinations.forEach { destination ->
             val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)
             QwitterNavigationBarItem(
                 selected = selected,

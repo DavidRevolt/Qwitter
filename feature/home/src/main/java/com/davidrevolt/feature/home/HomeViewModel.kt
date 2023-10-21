@@ -12,17 +12,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    userDataRepository: UserDataRepository
+    private val userDataRepository: UserDataRepository
 ) : ViewModel() {
-    val profileUiState = userDataRepository.currentUser.map(ProfileUiState::UserData).stateIn(
+
+
+    val profileUiState = userDataRepository.currentUser.map(ProfileUiState::UserData)
+        .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = ProfileUiState.Loading
     )
+
 }
 
 
 sealed interface ProfileUiState {
-    data class UserData(val data: User) : ProfileUiState
+    data class UserData(val user: User) : ProfileUiState
     object Loading : ProfileUiState
 }

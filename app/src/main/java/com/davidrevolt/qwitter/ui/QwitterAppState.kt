@@ -11,7 +11,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.davidrevolt.feature.home.HOME_ROUTE
 import com.davidrevolt.feature.home.navigateToHome
-import com.davidrevolt.feature.login.LOGIN_ROUTE
 import com.davidrevolt.feature.login.navigateToLogin
 import com.davidrevolt.qwitter.core.data.utils.authentication.AuthenticationService
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitor
@@ -46,7 +45,7 @@ fun rememberQwitterAppState(
 
 class QwitterAppState(
     networkMonitor: NetworkMonitor,
-    authenticationService: AuthenticationService,
+    val authenticationService: AuthenticationService,
     val navController: NavHostController,
     coroutineScope: CoroutineScope
 ) {
@@ -61,14 +60,13 @@ class QwitterAppState(
         )
 
 
-
     // Auth
-/*    val currentUser = authenticationService.currentUser
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = null,
-        )*/
+    /*    val currentUser = authenticationService.currentUser
+            .stateIn(
+                scope = coroutineScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = null,
+            )*/
 
 
     // Navigation
@@ -80,12 +78,11 @@ class QwitterAppState(
     private val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
             HOME_ROUTE -> TopLevelDestination.HOME
-            LOGIN_ROUTE -> TopLevelDestination.LOGIN
             else -> null
         }
 
     val shouldShowBottomBar: Boolean
-        @Composable get() = currentTopLevelDestination != TopLevelDestination.LOGIN
+        @Composable get() = currentTopLevelDestination != null
 
 
     /**
@@ -112,25 +109,25 @@ class QwitterAppState(
 
         when (topLevelDestination) {
             TopLevelDestination.HOME -> navController.navigateToHome(topLevelNavOptions)
-            TopLevelDestination.LOGIN -> navController.navigateToLogin(topLevelNavOptions)
         }
 
     }
 
     /**
-     * UI logic for clearing the whole backstack and then navigating to topLevelDestination.
-     * Use this Method after successful login, logout or app restart.
-     * @param topLevelDestination: The destination the app needs to navigate to.
+     * Clearing the whole backstack and then navigating to destination according to Auth state.
+     * Not logged in -> navigate to Login screen.
+     * Logged in -> navigate to Home screen.
      */
-    fun clearBackStackAndNavigate(topLevelDestination: TopLevelDestination) {
+    fun onAuthStateChangeNavigation() {
         val topLevelNavOptions = navOptions {
             popUpTo(0) { inclusive = true }
             launchSingleTop = true
 
         }
-        when (topLevelDestination) {
-            TopLevelDestination.HOME -> navController.navigateToHome(topLevelNavOptions)
-            TopLevelDestination.LOGIN -> navController.navigateToLogin(topLevelNavOptions)
-        }
+        if (authenticationService.userLoggedIn)
+            navController.navigateToHome(topLevelNavOptions)
+        else
+            navController.navigateToLogin(topLevelNavOptions)
     }
+
 }
