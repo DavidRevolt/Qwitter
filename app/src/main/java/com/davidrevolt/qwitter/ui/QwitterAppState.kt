@@ -12,6 +12,7 @@ import androidx.navigation.navOptions
 import com.davidrevolt.feature.home.HOME_ROUTE
 import com.davidrevolt.feature.home.navigateToHome
 import com.davidrevolt.feature.login.navigateToLogin
+import com.davidrevolt.qwitter.core.data.repository.UserDataRepository
 import com.davidrevolt.qwitter.core.data.utils.authentication.AuthenticationService
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitor
 import com.davidrevolt.qwitter.navigation.TopLevelDestination
@@ -25,18 +26,21 @@ import kotlinx.coroutines.flow.stateIn
 fun rememberQwitterAppState(
     authenticationService: AuthenticationService,
     networkMonitor: NetworkMonitor,
+    userDataRepository: UserDataRepository,
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ): QwitterAppState {
     return remember(
         networkMonitor,
         authenticationService,
+        userDataRepository,
         navController,
         coroutineScope
     ) {
         QwitterAppState(
             networkMonitor,
             authenticationService,
+            userDataRepository,
             navController,
             coroutineScope,
         )
@@ -45,7 +49,8 @@ fun rememberQwitterAppState(
 
 class QwitterAppState(
     networkMonitor: NetworkMonitor,
-    val authenticationService: AuthenticationService,
+    private val authenticationService: AuthenticationService,
+    userDataRepository: UserDataRepository,
     val navController: NavHostController,
     coroutineScope: CoroutineScope
 ) {
@@ -60,13 +65,12 @@ class QwitterAppState(
         )
 
 
-    // Auth
-    /*    val currentUser = authenticationService.currentUser
+      val currentUser = userDataRepository.currentUser
             .stateIn(
                 scope = coroutineScope,
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = null,
-            )*/
+            )
 
 
     // Navigation
@@ -75,13 +79,14 @@ class QwitterAppState(
     val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    private val currentTopLevelDestination: TopLevelDestination?
+    val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
             HOME_ROUTE -> TopLevelDestination.HOME
             else -> null
         }
 
-    val shouldShowBottomBar: Boolean
+    // Showing scaffold app bars only if we in TopLevelDestination screen
+    val shouldShowAppBars: Boolean
         @Composable get() = currentTopLevelDestination != null
 
 

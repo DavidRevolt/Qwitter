@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
+import com.davidrevolt.qwitter.core.data.repository.UserDataRepository
 import com.davidrevolt.qwitter.core.data.utils.authentication.AuthenticationService
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitor
 import com.davidrevolt.qwitter.core.data.utils.snackbarmanager.SnackbarManager
@@ -24,6 +25,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var snackbarManager: SnackbarManager
 
+    @Inject
+    lateinit var userDataRepository: UserDataRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -32,7 +36,7 @@ class MainActivity : ComponentActivity() {
             Locale.setDefault(locale)
 
             QwitterTheme {
-                QwitterApp(authenticationService, networkMonitor, snackbarManager)
+                QwitterApp(authenticationService, networkMonitor, snackbarManager, userDataRepository)
             }
         }
     }

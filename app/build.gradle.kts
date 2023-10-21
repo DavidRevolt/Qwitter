@@ -86,7 +86,7 @@ dependencies {
     debugImplementation(libs.ui.test.manifest)
 
     implementation(project(":core:designsystem"))
-
+    implementation(project(":core:model"))
     implementation(project(":core:data"))
     implementation(project(":feature:login"))
     implementation(project(":feature:home"))
