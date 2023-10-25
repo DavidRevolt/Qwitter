@@ -18,7 +18,7 @@ import androidx.compose.material.icons.rounded.VisibilityOff
 
 object QwitterIcons {
     val Add = Icons.Rounded.Add
-    val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
+
     val Check = Icons.Rounded.Check
     val Close = Icons.Rounded.Close
     val MoreVert = Icons.Default.MoreVert
@@ -29,7 +29,7 @@ object QwitterIcons {
     val Visibility_Off = Icons.Rounded.VisibilityOff
     val Lock = Icons.Rounded.Lock
 
-
+    val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
     val Person = Icons.Rounded.Person
     val Home = Icons.Rounded.Home
     val Login = Icons.AutoMirrored.Rounded.Login

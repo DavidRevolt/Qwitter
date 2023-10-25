@@ -1,12 +1,18 @@
 package com.davidrevolt.qwitter.core.editprofile
 
 import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -22,56 +28,55 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.davidrevolt.qwitter.core.designsystem.components.ImageLoader
 import com.davidrevolt.qwitter.core.designsystem.components.LoadingWheel
+import com.davidrevolt.qwitter.core.designsystem.components.QwitterTopAppBar
+import com.davidrevolt.qwitter.core.designsystem.components.clearImageLoaderCache
 import com.davidrevolt.qwitter.core.designsystem.icons.QwitterIcons
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProfileScreen(viewModel: EditProfileViewModel = hiltViewModel()) {
+fun EditProfileScreen(
+    onBackClick: () -> Unit,
+    viewModel: EditProfileViewModel = hiltViewModel()
+) {
 
-    val uiState by viewModel.profileUiState.collectAsStateWithLifecycle()
-    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
-    val onUpdateDisplayNameClick = viewModel::onUpdateDisplayNameClick
     val focusManager = LocalFocusManager.current
+    val uiState by viewModel.profileUiState.collectAsStateWithLifecycle()
+    val onSetDisplayNameClick = viewModel::onSetDisplayNameClick
+    val onSetProfilePictureClick = viewModel::onSetProfilePictureClick
 
     Column(
         modifier = Modifier
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     focusManager.clearFocus()
-                })}
-            .fillMaxSize()
-            .safeDrawingPadding(),
+                })
+            }
+            .fillMaxSize(),
+           // .safeDrawingPadding()
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (uiState) {
             is EditProfileUiState.UserData -> {
 
                 val user = (uiState as EditProfileUiState.UserData).user
-/*                QwitterTopAppBar(
-                    navigationIcon = {
-                        CoilImageReq(
-                            modifier = Modifier.clip(CircleShape),
-                            imgUri = user.profilePictureUri
-                        )
-                    },
-                    onProfileClick = {},
-                )*/
                 EditProfileContent(
                     displayName = user.displayName,
                     profilePictureUri = user.profilePictureUri,
-                    onUpdateDisplayNameClick = onUpdateDisplayNameClick,
-                    onUpdateProfilePictureClick = {},
-                    isRefreshing = isRefreshing
+                    onSetDisplayNameClick = onSetDisplayNameClick,
+                    onSetProfilePictureClick = onSetProfilePictureClick,
+                    onBackClick = onBackClick
                 )
             }
 
@@ -82,21 +87,51 @@ fun EditProfileScreen(viewModel: EditProfileViewModel = hiltViewModel()) {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun EditProfileContent(
     displayName: String,
     profilePictureUri: Uri,
-    onUpdateDisplayNameClick: (String) -> Unit,
-    onUpdateProfilePictureClick: () -> Unit,
-    isRefreshing: Boolean
+    onSetDisplayNameClick: (String) -> Unit,
+    onSetProfilePictureClick:(Uri) -> Unit,
+    onBackClick: () -> Unit,
 ) {
+    QwitterTopAppBar(
+        title = { Text("Edit Profile") },
+        navigationIcon = {Icon(imageVector = QwitterIcons.ArrowBack, contentDescription ="Back" )},
+        actionIcon = { Text("Save") },
+        onNavigationIconClick = onBackClick,
+       // onActionClick = onSaveClick
+    )
 
-    DisplayNameForm(onUpdateDisplayName = onUpdateDisplayNameClick, placeholder = displayName)
+    val context = LocalContext.current
+    val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) {
+            clearImageLoaderCache(context)
+            Log.d("AppLog", "Selected URI: $uri")
+            onSetProfilePictureClick(uri)
+
+
+        } else {
+            Log.d("AppLog", "No media selected")
+        }
+    }
+
+    ImageLoader(modifier = Modifier
+        .padding(50.dp)
+        .clip(CircleShape)
+        .size(200.dp)
+        .clickable {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        },imgUri = profilePictureUri)
+    DisplayNameForm(placeholder = displayName, onSetDisplayNameClick=onSetDisplayNameClick)
 }
 
 
+
+
 @Composable
-private fun DisplayNameForm(onUpdateDisplayName: (String) -> Unit, placeholder: String) {
+private fun DisplayNameForm(placeholder: String,onSetDisplayNameClick: (String) -> Unit ) {
     var text by remember { mutableStateOf(placeholder) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -115,10 +150,8 @@ private fun DisplayNameForm(onUpdateDisplayName: (String) -> Unit, placeholder: 
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         keyboardActions = KeyboardActions(onNext = {
             if (text.isNotEmpty()) {
-                onUpdateDisplayName(text)
-                // Hide the keyboard after submitting the search
+                onSetDisplayNameClick(text)
                 keyboardController?.hide()
-                //or hide keyboard
                 focusManager.clearFocus()
             } else {
                 error = true

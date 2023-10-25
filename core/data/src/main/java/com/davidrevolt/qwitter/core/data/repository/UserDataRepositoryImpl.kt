@@ -2,14 +2,19 @@ package com.davidrevolt.qwitter.core.data.repository
 
 import android.net.Uri
 import com.davidrevolt.qwitter.core.model.User
+import com.davidrevolt.qwitter.core.network.QwitterNetworkStorageSource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class UserDataRepositoryImpl @Inject constructor(private val firebaseAuth: FirebaseAuth) :
+class UserDataRepositoryImpl @Inject constructor(
+    private val firebaseAuth: FirebaseAuth,
+    private val networkStorage: QwitterNetworkStorageSource
+) :
     UserDataRepository {
 
     override val currentUserId: String
@@ -23,39 +28,40 @@ class UserDataRepositoryImpl @Inject constructor(private val firebaseAuth: Fireb
      * When a user is signed in
      * When the current user is signed out
      * When the current user changes
-     * Flow doesn't update on user profile updates
+     * When auth.currentUser?.reload()?.await()
      */
-
     override val currentUser: Flow<User>
         get() = callbackFlow {
             val listener =
                 FirebaseAuth.AuthStateListener { auth ->
-                    this.trySend(auth.currentUser?.let {
-                        User(
-                            it.uid,
-                            if (it.displayName != null) it.displayName!! else "",
-                            if (it.photoUrl != null) it.photoUrl!! else Uri.EMPTY
-                        )
-                    } ?: User())
+                       trySend(auth.currentUser?.let {
+                            User(
+                                it.uid,
+                                if (it.displayName != null) it.displayName!! else "",
+                                if (it.photoUrl != null) it.photoUrl!! else Uri.EMPTY
+                            )
+                        } ?: User())
+
                 }
             firebaseAuth.addAuthStateListener(listener)
             awaitClose { firebaseAuth.removeAuthStateListener(listener) }
         }
 
-    override suspend fun updateDisplayName(displayName: String) {
+    override suspend fun setDisplayName(displayName: String) {
         //  throw RuntimeException()
         val profileUpdates = UserProfileChangeRequest.Builder()
             .setDisplayName(displayName)
             .build()
-        firebaseAuth.currentUser?.updateProfile(profileUpdates)
+        firebaseAuth.currentUser?.updateProfile(profileUpdates)?.await()
 
     }
 
-    override suspend fun uploadProfilePicture(photoUri: Uri) {
+    override suspend fun setProfilePicture(img: Uri) {
+        val networkUri = networkStorage.uploadProfilePicture(img, currentUserId)
         val profileUpdates = UserProfileChangeRequest.Builder()
-            .setPhotoUri(photoUri)
+            .setPhotoUri(networkUri)
             .build()
-        firebaseAuth.currentUser?.updateProfile(profileUpdates)
+        firebaseAuth.currentUser?.updateProfile(profileUpdates)?.await()
+       // firebaseAuth.currentUser?.reload()?.await()
     }
-
 }

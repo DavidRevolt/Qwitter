@@ -4,5 +4,5 @@ import android.net.Uri
 
 interface QwitterNetworkStorageSource {
 
-    suspend fun uploadProfilePicture(imgPath: Uri ) :Uri
+    suspend fun uploadProfilePicture(imgPath: Uri, uid: String) :Uri
 }

@@ -36,7 +36,12 @@ class MainActivity : ComponentActivity() {
             Locale.setDefault(locale)
 
             QwitterTheme {
-                QwitterApp(authenticationService, networkMonitor, snackbarManager, userDataRepository)
+                QwitterApp(
+                    authenticationService,
+                    networkMonitor,
+                    snackbarManager,
+                    userDataRepository
+                )
             }
         }
     }

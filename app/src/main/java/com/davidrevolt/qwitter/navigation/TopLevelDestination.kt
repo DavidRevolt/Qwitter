@@ -27,7 +27,7 @@ enum class TopLevelDestination(
         title = {
             Image(
                 painter = painterResource(id = qwitter_logo), contentDescription = null,
-                modifier = Modifier.size(35.dp)
+                modifier = Modifier.size(24.dp)
             )
         }
     )

@@ -19,15 +19,17 @@ fun QwitterNavigation(
     authenticationService: AuthenticationService
 ) {
     val navController = appState.navController
-    val startDestination = if(authenticationService.userLoggedIn) HOME_ROUTE else LOGIN_ROUTE
+    val startDestination = if (authenticationService.userLoggedIn) HOME_ROUTE else LOGIN_ROUTE
 
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        loginScreen(onSuccessLogin = { appState.onAuthStateChangeNavigation() },
-            onShowSnackbar = onShowSnackbar,)
-        homeScreen(onProfileClick =  navController::navigateToEditProfile )
-        editProfileScreen()
+        loginScreen(
+            onSuccessLogin = appState::onAuthStateChangeNavigation,
+            onShowSnackbar = onShowSnackbar,
+        )
+        homeScreen(onProfileClick = navController::navigateToEditProfile)
+        editProfileScreen(onBackClick = navController::popBackStack)
     }
 }

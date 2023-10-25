@@ -1,5 +1,7 @@
 package com.davidrevolt.qwitter.core.editprofile
 
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidrevolt.qwitter.core.data.repository.UserDataRepository
@@ -29,9 +31,21 @@ class EditProfileViewModel @Inject constructor(
             initialValue = EditProfileUiState.Loading
         )
 
-    fun onUpdateDisplayNameClick(userName: String){
+    fun onSetDisplayNameClick(userName: String) {
         viewModelScope.launch {
-            userDataRepository.updateDisplayName(userName)
+            userDataRepository.setDisplayName(userName)
+        }
+    }
+
+    fun onSetProfilePictureClick(img: Uri) {
+        viewModelScope.launch {
+            try{
+                userDataRepository.setProfilePicture(img)
+            }
+            catch (e:Exception){
+                Log.d("AppLog", "${e.toString()}")
+            }
+
         }
     }
 }

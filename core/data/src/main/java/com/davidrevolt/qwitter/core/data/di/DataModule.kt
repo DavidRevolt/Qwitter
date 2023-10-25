@@ -18,7 +18,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataModule { // might switch to interface
+abstract class DataModule { // switch to interface if only using @Binds without companion object
 
     // Binding
     @Binds

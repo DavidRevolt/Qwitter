@@ -5,12 +5,20 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-const val PROFILE_STORAGE = "profile_img"
+const val PROFILE_STORAGE = "profile_pictures"
 class QwitterNetworkStorageSourceImpl  @Inject constructor(private val firebaseStorage : FirebaseStorage)
     :QwitterNetworkStorageSource{
-    override suspend fun uploadProfilePicture(imgPath: Uri): Uri {
+
+
+    /**
+     * @param imgPath local storage uri to profile picture
+     * @param uid the user unique id
+     * @return https path to profile picture
+     * */
+    override suspend fun uploadProfilePicture(imgPath: Uri, uid: String): Uri {
         val storageRef = firebaseStorage.reference
-        return storageRef.putFile(imgPath).await().storage.downloadUrl.await()
+        val profilePicturesRef = storageRef.child("$PROFILE_STORAGE/$uid")
+        return profilePicturesRef.putFile(imgPath).await().storage.downloadUrl.await()
     }
 
 }

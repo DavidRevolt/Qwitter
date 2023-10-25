@@ -11,8 +11,8 @@ fun NavController.navigateToEditProfile(navOptions: NavOptions? = null) {
     this.navigate(EDIT_PROFILE_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.editProfileScreen() {
+fun NavGraphBuilder.editProfileScreen(onBackClick: () -> Unit) {
     composable(route = EDIT_PROFILE_ROUTE) {
-        EditProfileScreen()
+        EditProfileScreen(onBackClick = onBackClick)
     }
 }

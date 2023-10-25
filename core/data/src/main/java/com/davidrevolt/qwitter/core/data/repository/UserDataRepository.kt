@@ -9,7 +9,7 @@ interface UserDataRepository {
    // val currentUser: User?
     val currentUser: Flow<User>
 
-    suspend fun updateDisplayName(displayName: String)
-    suspend fun uploadProfilePicture(photoUri: Uri)
+    suspend fun setDisplayName(displayName: String)
+    suspend fun setProfilePicture(photoUri: Uri)
 
 }

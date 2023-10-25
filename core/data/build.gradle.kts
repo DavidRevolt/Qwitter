@@ -56,4 +56,5 @@ dependencies {
     implementation(libs.firebase.ui.auth)
 
     implementation(project(":core:model"))
+    implementation(project(":core:network"))
 }

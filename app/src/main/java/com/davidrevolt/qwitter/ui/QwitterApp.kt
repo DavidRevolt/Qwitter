@@ -1,11 +1,11 @@
 package com.davidrevolt.qwitter.ui
 
 import android.net.Uri
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -29,7 +30,7 @@ import com.davidrevolt.qwitter.core.data.repository.UserDataRepository
 import com.davidrevolt.qwitter.core.data.utils.authentication.AuthenticationService
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitor
 import com.davidrevolt.qwitter.core.data.utils.snackbarmanager.SnackbarManager
-import com.davidrevolt.qwitter.core.designsystem.components.CoilImageReq
+import com.davidrevolt.qwitter.core.designsystem.components.ImageLoader
 import com.davidrevolt.qwitter.core.designsystem.components.QwitterBottomNavigationBar
 import com.davidrevolt.qwitter.core.designsystem.components.QwitterNavigationBarItem
 import com.davidrevolt.qwitter.core.designsystem.components.QwitterTopAppBar
@@ -162,13 +163,12 @@ private fun QwitterTopBar(
 ) {
     QwitterTopAppBar(
         title = title,
-        profilePicture = {
-            if (profilePictureUri != null) {
-                CoilImageReq(
-                    modifier = Modifier.clip(CircleShape).clickable { onProfilePictureClick.invoke() },
-                    imgUri = profilePictureUri
-                )
-            }
-        }
+        navigationIcon = {
+            ImageLoader(
+                modifier = Modifier.clip(CircleShape).size(24.dp),
+                imgUri = profilePictureUri
+            )
+        },
+        onNavigationIconClick = onProfilePictureClick
     )
 }
