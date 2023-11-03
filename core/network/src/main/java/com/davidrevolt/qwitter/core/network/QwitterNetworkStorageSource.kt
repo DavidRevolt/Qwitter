@@ -5,7 +5,7 @@ import android.net.Uri
 interface QwitterNetworkStorageSource {
 
     /**
-     * @param imgPath local storage uri to profile picture.
+     * @param imgUri local storage uri to profile picture.
      * @param uid the user unique id.
      * @return https path to profile picture.
      */
