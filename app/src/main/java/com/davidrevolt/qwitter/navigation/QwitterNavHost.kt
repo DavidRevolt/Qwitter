@@ -29,7 +29,7 @@ fun QwitterNavigation(
             onSuccessLogin = appState::onAuthStateChangeNavigation,
             onShowSnackbar = onShowSnackbar,
         )
-        homeScreen(onProfileClick = navController::navigateToEditProfile)
+        homeScreen(onProfileClick = navController::navigateToEditProfile, onShowSnackbar = onShowSnackbar)
         editProfileScreen(onBackClick = navController::popBackStack)
     }
 }

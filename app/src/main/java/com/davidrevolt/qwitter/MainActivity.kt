@@ -28,13 +28,13 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var userDataRepository: UserDataRepository
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             val locale = Locale("en")
             Locale.setDefault(locale)
-
             QwitterTheme {
                 QwitterApp(
                     authenticationService,

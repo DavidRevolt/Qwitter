@@ -2,7 +2,9 @@ package com.davidrevolt.qwitter.core.network.di
 
 import com.davidrevolt.qwitter.core.network.QwitterNetworkStorageSource
 import com.davidrevolt.qwitter.core.network.QwitterNetworkStorageSourceImpl
+import com.google.firebase.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.storage
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -17,9 +19,12 @@ abstract class NetworkModule {
     @Binds
     abstract fun bindsQwitterNetworkStorageSource(qwitterNetworkStorageSourceImpl: QwitterNetworkStorageSourceImpl): QwitterNetworkStorageSource
 
+/*    @Binds
+    abstract fun bindsQwitterNetworkDataSource(qwitterNetworkDataSourceImpl: QwitterNetworkDataSourceImpl): QwitterNetworkDataSource*/
+
     companion object {
         @Provides
         @Singleton
-        fun provideFirebaseStorage(): FirebaseStorage = FirebaseStorage.getInstance()
+        fun provideFirebaseStorage(): FirebaseStorage = Firebase.storage
     }
 }

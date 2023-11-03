@@ -1,7 +1,6 @@
 package com.davidrevolt.qwitter.core.editprofile
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -39,9 +37,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.davidrevolt.qwitter.core.designsystem.components.ImageLoader
+import com.davidrevolt.qwitter.core.designsystem.components.LoadingIndicator
 import com.davidrevolt.qwitter.core.designsystem.components.LoadingWheel
 import com.davidrevolt.qwitter.core.designsystem.components.QwitterTopAppBar
-import com.davidrevolt.qwitter.core.designsystem.components.clearImageLoaderCache
 import com.davidrevolt.qwitter.core.designsystem.icons.QwitterIcons
 
 
@@ -52,7 +50,7 @@ fun EditProfileScreen(
 ) {
 
     val focusManager = LocalFocusManager.current
-    val uiState by viewModel.profileUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.editProfileUiState.collectAsStateWithLifecycle()
     val onSetDisplayNameClick = viewModel::onSetDisplayNameClick
     val onSetProfilePictureClick = viewModel::onSetProfilePictureClick
 
@@ -64,16 +62,16 @@ fun EditProfileScreen(
                 })
             }
             .fillMaxSize(),
-           // .safeDrawingPadding()
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (uiState) {
-            is EditProfileUiState.UserData -> {
-
-                val user = (uiState as EditProfileUiState.UserData).user
+            is EditProfileUiState.Data -> {
+                val user = (uiState as EditProfileUiState.Data).user
+                val isRefreshing = (uiState as EditProfileUiState.Data).isRefreshing
                 EditProfileContent(
                     displayName = user.displayName,
                     profilePictureUri = user.profilePictureUri,
+                    isRefreshing = isRefreshing,
                     onSetDisplayNameClick = onSetDisplayNameClick,
                     onSetProfilePictureClick = onSetProfilePictureClick,
                     onBackClick = onBackClick
@@ -92,30 +90,33 @@ fun EditProfileScreen(
 private fun EditProfileContent(
     displayName: String,
     profilePictureUri: Uri,
+    isRefreshing: Boolean,
     onSetDisplayNameClick: (String) -> Unit,
-    onSetProfilePictureClick:(Uri) -> Unit,
+    onSetProfilePictureClick: (Uri) -> Unit,
     onBackClick: () -> Unit,
 ) {
+    if (isRefreshing)
+        LoadingIndicator()
+
     QwitterTopAppBar(
         title = { Text("Edit Profile") },
-        navigationIcon = {Icon(imageVector = QwitterIcons.ArrowBack, contentDescription ="Back" )},
+        navigationIcon = {
+            Icon(
+                imageVector = QwitterIcons.ArrowBack,
+                contentDescription = "Back"
+            )
+        },
         actionIcon = { Text("Save") },
         onNavigationIconClick = onBackClick,
-       // onActionClick = onSaveClick
+        // onActionClick = onSaveClick
     )
+    //Pickup Image Activity
+    val pickMedia =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null)
+                onSetProfilePictureClick(uri)
 
-    val context = LocalContext.current
-    val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if (uri != null) {
-            clearImageLoaderCache(context)
-            Log.d("AppLog", "Selected URI: $uri")
-            onSetProfilePictureClick(uri)
-
-
-        } else {
-            Log.d("AppLog", "No media selected")
         }
-    }
 
     ImageLoader(modifier = Modifier
         .padding(50.dp)
@@ -123,15 +124,15 @@ private fun EditProfileContent(
         .size(200.dp)
         .clickable {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        },imgUri = profilePictureUri)
-    DisplayNameForm(placeholder = displayName, onSetDisplayNameClick=onSetDisplayNameClick)
+        }, imgUri = profilePictureUri
+    )
+    DisplayNameForm(placeholder = displayName, onSetDisplayNameClick = onSetDisplayNameClick)
+
 }
 
 
-
-
 @Composable
-private fun DisplayNameForm(placeholder: String,onSetDisplayNameClick: (String) -> Unit ) {
+private fun DisplayNameForm(placeholder: String, onSetDisplayNameClick: (String) -> Unit) {
     var text by remember { mutableStateOf(placeholder) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current

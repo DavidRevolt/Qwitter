@@ -7,7 +7,9 @@ plugins {
     alias(libs.plugins.kapt) apply false
     alias(libs.plugins.com.android.library) apply false
     alias(libs.plugins.google.services) apply false
+   alias(libs.plugins.firebase.crashlytics) apply false
 }
+
 allprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         kotlinOptions {

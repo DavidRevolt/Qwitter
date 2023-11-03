@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,6 +39,8 @@ import com.davidrevolt.qwitter.core.editprofile.navigateToEditProfile
 import com.davidrevolt.qwitter.navigation.QwitterNavigation
 import com.davidrevolt.qwitter.navigation.TopLevelDestination
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QwitterApp(
     authenticationService: AuthenticationService,
@@ -64,9 +67,8 @@ fun QwitterApp(
             )
         }
     }
-
     Scaffold(
-        topBar = {
+       topBar = {
             if (appState.shouldShowAppBars) {
                 appState.currentTopLevelDestination?.let {
                     QwitterTopBar(
@@ -80,7 +82,7 @@ fun QwitterApp(
         containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         snackbarHost = {
-            SnackbarHost(snackbarHostState)
+            SnackbarHost(snackbarHostState, modifier = Modifier.safeDrawingPadding())
         },
         bottomBar = {
             if (appState.shouldShowAppBars) {
@@ -165,7 +167,9 @@ private fun QwitterTopBar(
         title = title,
         navigationIcon = {
             ImageLoader(
-                modifier = Modifier.clip(CircleShape).size(24.dp),
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(24.dp),
                 imgUri = profilePictureUri
             )
         },

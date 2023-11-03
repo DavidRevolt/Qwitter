@@ -37,6 +37,6 @@ fun clearImageLoaderUriCache(context: Context, imgUri: Uri?) {
 @OptIn(ExperimentalCoilApi::class)
 fun clearImageLoaderCache(context: Context) {
     val imageLoader = context.imageLoader
-    imageLoader.diskCache?.clear()
-    imageLoader.memoryCache?.clear()
+   imageLoader.diskCache?.clear()
+   imageLoader.memoryCache?.clear()
 }

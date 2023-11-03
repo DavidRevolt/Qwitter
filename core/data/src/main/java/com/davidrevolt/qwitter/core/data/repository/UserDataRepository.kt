@@ -6,10 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserDataRepository {
     val currentUserId: String
-   // val currentUser: User?
     val currentUser: Flow<User>
 
     suspend fun setDisplayName(displayName: String)
-    suspend fun setProfilePicture(photoUri: Uri)
+    suspend fun setProfilePicture(imgUri: Uri)
 
 }

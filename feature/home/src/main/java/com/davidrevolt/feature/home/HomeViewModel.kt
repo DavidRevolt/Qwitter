@@ -1,18 +1,22 @@
 package com.davidrevolt.feature.home
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidrevolt.qwitter.core.data.repository.UserDataRepository
+import com.davidrevolt.qwitter.core.data.utils.snackbarmanager.SnackbarManager
 import com.davidrevolt.qwitter.core.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val userDataRepository: UserDataRepository
+    private val userDataRepository: UserDataRepository,
+    private val snackbarManager: SnackbarManager
 ) : ViewModel() {
 
 
@@ -23,6 +27,15 @@ class HomeViewModel @Inject constructor(
         initialValue = ProfileUiState.Loading
     )
 
+    fun buttonTest(msg:String){
+        viewModelScope.launch {
+            snackbarManager.snackbarHostState.showSnackbar(
+                message = msg,
+                actionLabel = null,
+                duration = SnackbarDuration.Short,
+            )
+        }
+    }
 }
 
 

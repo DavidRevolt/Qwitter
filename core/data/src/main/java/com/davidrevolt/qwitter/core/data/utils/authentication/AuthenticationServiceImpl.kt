@@ -5,11 +5,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 
-class AuthenticationServiceImpl @Inject constructor() : AuthenticationService {
-
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
-
+class AuthenticationServiceImpl @Inject constructor(private val firebaseAuth: FirebaseAuth) : AuthenticationService {
 
     override val userLoggedIn: Boolean
         get() =  firebaseAuth.currentUser != null

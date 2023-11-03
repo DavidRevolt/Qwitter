@@ -5,10 +5,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import javax.inject.Inject
 
-class SnackbarManagerImpl @Inject constructor() : SnackbarManager {
-
-    private val _snackbarHostState = SnackbarHostState()
-
+class SnackbarManagerImpl @Inject constructor(private val _snackbarHostState: SnackbarHostState) : SnackbarManager {
 
     override val snackbarHostState: SnackbarHostState
         get() = _snackbarHostState

@@ -65,7 +65,7 @@ fun LoadingIndicator(text: String = "Loading", dimAmount: Float = 0.5f) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CircularProgressIndicator(
+              CircularProgressIndicator(
                     modifier = Modifier
                         .size(size = 60.dp)
                         .padding(5.dp)
