@@ -1,13 +1,14 @@
 package com.davidrevolt.qwitter.core.model
 
 import android.net.Uri
+import java.util.Date
 
 data class Tweet(
-    val creator: User,
+    val id: String,
+    val userId: String,
     val content: String,
-    val image: Uri?,
-    var likes: Int,
-    var retweets: Int,
-    val comments: Int,
-    val timestamp: Long
+    val mediaUri: List<Uri>,
+    val comments: List<Tweet>,
+    val likedBy: List<User>,
+    val timestamp: Date
 )

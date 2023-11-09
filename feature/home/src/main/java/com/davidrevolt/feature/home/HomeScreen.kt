@@ -1,6 +1,7 @@
 package com.davidrevolt.feature.home
 
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
@@ -11,7 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.davidrevolt.qwitter.core.designsystem.components.LoadingWheel
@@ -26,22 +26,26 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    val uiState by viewModel.profileUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.homeUiState.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
-    val btnTest = viewModel::buttonTest
+    val snackbarMangerTest = viewModel::snackbarMangerTest
+    val tweetTest = viewModel::tweetTest
     Column(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (uiState) {
-            is ProfileUiState.UserData -> {
-                val user = (uiState as ProfileUiState.UserData).user
-                Text(text = "Hello ${user.displayName}", fontSize = 16.sp)
-                Button(onClick = {scope.launch{onShowSnackbar("Test",null)}},content = {Text("Test snackbar screen")})
-                Button(onClick = { btnTest("TEST") },content = {Text("Test snackbar viewModel")})
+            is HomeUiState.Data -> {
+                val data = (uiState as HomeUiState.Data)
+                val tweets = data.tweets
+                tweets.forEach{t->   Log.d("AppLog","${t}")}
+
+                Button(onClick = {scope.launch{onShowSnackbar("Test",null)}},content = {Text("Test onShowSnackbar")})
+                Button(onClick = { snackbarMangerTest("TEST") },content = {Text("Test snackbar Manger")})
+                Button(onClick = { tweetTest("Tweet Content") },content = {Text("Test Tweet")})
             }
-            is ProfileUiState.Loading -> LoadingWheel()
+            is HomeUiState.Loading -> LoadingWheel()
         }
     }
 }

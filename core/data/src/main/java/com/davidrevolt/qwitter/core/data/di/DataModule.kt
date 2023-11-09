@@ -1,6 +1,8 @@
 package com.davidrevolt.qwitter.core.data.di
 
 import androidx.compose.material3.SnackbarHostState
+import com.davidrevolt.qwitter.core.data.repository.TweetRepository
+import com.davidrevolt.qwitter.core.data.repository.TweetRepositoryImpl
 import com.davidrevolt.qwitter.core.data.repository.UserDataRepository
 import com.davidrevolt.qwitter.core.data.repository.UserDataRepositoryImpl
 import com.davidrevolt.qwitter.core.data.utils.analytics.Analytics
@@ -28,9 +30,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class DataModule { // switch to interface if only using @Binds without companion object
 
-    // Binding
+    // Repos
     @Binds
     abstract fun bindsUserDataRepository(userDataRepositoryImpl: UserDataRepositoryImpl): UserDataRepository
+
+    @Binds
+    abstract fun bindsTweetRepository(tweetRepositoryImpl: TweetRepositoryImpl): TweetRepository
 
 
     // Utils
