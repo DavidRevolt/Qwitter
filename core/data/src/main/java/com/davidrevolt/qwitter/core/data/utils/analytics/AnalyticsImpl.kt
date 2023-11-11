@@ -10,6 +10,6 @@ class AnalyticsImpl @Inject constructor(
 
     override fun logException(throwable: Throwable) {
         firebaseCrashlytics.recordException(throwable)
-        Log.d("AppLog", "Crashlytics sent report: ${throwable.message}")
+        Log.e("AppLog", "Crashlytics sent report: ${throwable.message}")
     }
 }

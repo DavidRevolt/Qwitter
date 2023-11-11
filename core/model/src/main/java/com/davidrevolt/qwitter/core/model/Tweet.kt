@@ -10,5 +10,5 @@ data class Tweet(
     val mediaUri: List<Uri>,
     val comments: List<Tweet>,
     val likedBy: List<User>,
-    val timestamp: Date
+    val publishDate: Date
 )

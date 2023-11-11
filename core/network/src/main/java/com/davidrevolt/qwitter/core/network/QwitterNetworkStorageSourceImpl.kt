@@ -1,7 +1,6 @@
 package com.davidrevolt.qwitter.core.network
 
 import android.net.Uri
-import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import java.time.Instant
@@ -17,9 +16,7 @@ class QwitterNetworkStorageSourceImpl @Inject constructor(private val firebaseSt
         val storageRef = firebaseStorage.reference
         val profilePicturesRef =
             storageRef.child("$USERS_STORAGE/$uid/$PROFILE_STORAGE/${Instant.now()}")
-        val result = profilePicturesRef.putFile(imgUri).await().storage.downloadUrl.await()
-        Log.d("AppLog", "2. Returning Result")
-        return result
+        return profilePicturesRef.putFile(imgUri).await().storage.downloadUrl.await()
     }
 
 }

@@ -1,5 +1,6 @@
 package com.davidrevolt.qwitter.ui
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -20,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transform
 
 
 @Composable
@@ -55,7 +57,7 @@ class QwitterAppState(
     coroutineScope: CoroutineScope
 ) {
 
-
+    // Internet Connection
     val isOffline = networkMonitor.isOnline()
         .map(Boolean::not)
         .stateIn(
@@ -65,12 +67,21 @@ class QwitterAppState(
         )
 
 
-      val currentUser = userDataRepository.currentUser
-            .stateIn(
-                scope = coroutineScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = null,
-            )
+    // Fetch CurrentUser data from db only if authState[user is logged in] is true
+    val currentUser = authenticationService.authState().transform { authState ->
+        Log.i("AppLog", "AuthState is: $authState")
+        when (authState) {
+            true -> { userDataRepository.getCurrentUser().collect { emit(it) }}
+
+            false -> {
+                emit(null)
+            }
+        }
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = null
+    )
 
 
     // Navigation

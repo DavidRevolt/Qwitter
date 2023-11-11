@@ -1,5 +1,6 @@
 package com.davidrevolt.feature.login
 
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
@@ -26,14 +27,20 @@ fun LoginScreen(
     onShowSnackbar: suspend (String, String?) -> Boolean,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+    val createCurrentUserDataCollection = viewModel::createCurrentUserDataCollection
     val scope = rememberCoroutineScope()
     val signInIntent = viewModel::provideSignInIntent
     val signInLauncher = rememberLauncherForActivityResult(
         FirebaseAuthUIActivityResultContract()
     ) { result ->
         if (result.resultCode == ComponentActivity.RESULT_OK) {
-            onSuccessLogin()
+            scope.launch {
+                createCurrentUserDataCollection.invoke().invokeOnCompletion {
+                   onSuccessLogin.invoke()
+                }
+            }
         } else {
+            Log.e("AppLog", "Failure in LoginScreen")
             val message = result.idpResponse?.error?.message
             if (message != null) {
                 scope.launch {onShowSnackbar(message,null)}

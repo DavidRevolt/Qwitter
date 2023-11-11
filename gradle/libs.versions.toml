@@ -57,7 +57,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 
 # Firebase, When using the BoM, you don't specify versions in Firebase library dependencies
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
-firebase-ui-auth = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "firebase-ui-auth" }
+firebase-ui-auth = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref ="firebase-ui-auth"}
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }

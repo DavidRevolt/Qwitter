@@ -16,5 +16,5 @@ data class NetworkFirebaseTweet(
     val comments: List<NetworkFirebaseTweet> = emptyList(),
     val likedBy: List<String> = emptyList(),
     @ServerTimestamp
-    val timestamp: Date = Timestamp.now().toDate()  // @ServerTimestamp-annotated field, it will be replaced with a server-generated timestamp
+    val publishDate: Date = Timestamp.now().toDate()  // @ServerTimestamp-annotated field, it will be replaced with a server-generated timestamp
 )

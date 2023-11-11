@@ -1,6 +1,7 @@
 package com.davidrevolt.qwitter.ui
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -18,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -38,9 +41,9 @@ import com.davidrevolt.qwitter.core.designsystem.components.QwitterTopAppBar
 import com.davidrevolt.qwitter.core.editprofile.navigateToEditProfile
 import com.davidrevolt.qwitter.navigation.QwitterNavigation
 import com.davidrevolt.qwitter.navigation.TopLevelDestination
+import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QwitterApp(
     authenticationService: AuthenticationService,
@@ -68,7 +71,7 @@ fun QwitterApp(
         }
     }
     Scaffold(
-       topBar = {
+        topBar = {
             if (appState.shouldShowAppBars) {
                 appState.currentTopLevelDestination?.let {
                     QwitterTopBar(
@@ -99,6 +102,10 @@ fun QwitterApp(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            val scope = rememberCoroutineScope()
+            Button(
+                onClick = { scope.launch { authenticationService.signOut() } },
+                content = { Text("signOut") })
             QwitterNavigation(
                 appState = appState,
                 onShowSnackbar = { message, action ->

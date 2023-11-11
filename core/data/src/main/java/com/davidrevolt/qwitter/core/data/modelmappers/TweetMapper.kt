@@ -15,5 +15,5 @@ fun NetworkFirebaseTweet.asExternalModel() =
         mediaUri = mediaUri.map { it -> Uri.parse(it) },
         comments = emptyList(),
         likedBy = emptyList(),
-        timestamp = timestamp
+        publishDate = publishDate
     )

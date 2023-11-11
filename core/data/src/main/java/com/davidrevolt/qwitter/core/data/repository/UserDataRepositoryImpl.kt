@@ -2,18 +2,19 @@ package com.davidrevolt.qwitter.core.data.repository
 
 import android.net.Uri
 import android.util.Log
+import com.davidrevolt.qwitter.core.data.modelmappers.asExternalModel
 import com.davidrevolt.qwitter.core.model.User
+import com.davidrevolt.qwitter.core.network.QwitterNetworkDataSource
 import com.davidrevolt.qwitter.core.network.QwitterNetworkStorageSource
+import com.davidrevolt.qwitter.core.network.model.NetworkFirebaseUser
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserDataRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
+    private val networkDataSource: QwitterNetworkDataSource,
     private val networkStorage: QwitterNetworkStorageSource
 ) :
     UserDataRepository {
@@ -22,46 +23,41 @@ class UserDataRepositoryImpl @Inject constructor(
         get() = firebaseAuth.currentUser?.uid.orEmpty()
 
 
-    /**
-     * Flow Update only when:
-     * Right after the listener has been registered
-     * When a user is signed in
-     * When the current user is signed out
-     * When the current user changes
-     * When auth.currentUser?.reload()
-     */
-    override val currentUser: Flow<User>
-        get() = callbackFlow {
-            val listener =
-                FirebaseAuth.AuthStateListener { auth ->
-                    channel.trySend(auth.currentUser?.let {
-                        User(
-                            it.uid,
-                            if (it.displayName != null) it.displayName!! else "",
-                            if (it.photoUrl != null) it.photoUrl!! else Uri.EMPTY
-                        )
-                    } ?: User())
-                }
-            firebaseAuth.addAuthStateListener(listener)
-            awaitClose { firebaseAuth.removeAuthStateListener(listener) }
-        }
+    override fun getCurrentUser(): Flow<User> =
+        networkDataSource.getCurrentUser(currentUserId).map { it?.asExternalModel() ?: User() }
+
+    override suspend fun getUser(uid:String): User =
+        networkDataSource.getUser(uid)?.asExternalModel() ?: User()
+
 
     override suspend fun setDisplayName(displayName: String) {
-        val profileUpdates = UserProfileChangeRequest.Builder()
-            .setDisplayName(displayName)
-            .build()
-        firebaseAuth.currentUser?.updateProfile(profileUpdates)?.await()
-
+        Log.i("AppLog", "1. Start setDisplayName")
+        networkDataSource.setDisplayName(currentUserId, displayName)
+        Log.i("AppLog", "2. setDisplayName Done!")
     }
 
     override suspend fun setProfilePicture(imgUri: Uri) {
-        Log.d("AppLog", "1. Start setProfilePicture")
+        Log.i("AppLog", "1. Start setProfilePicture")
         val networkUri = networkStorage.uploadProfilePicture(imgUri, currentUserId)
-        Log.d("AppLog", "3. Network Uri is: $networkUri")
-        val profileUpdates = UserProfileChangeRequest.Builder()
-            .setPhotoUri(networkUri)
-            .build()
-        firebaseAuth.currentUser?.updateProfile(profileUpdates)?.await()
-        Log.d("AppLog", "4. setProfilePicture Done!")
+        Log.i("AppLog", "2. Network Uri is: $networkUri")
+        networkDataSource.setProfilePicture(currentUserId, networkUri.toString())
+        Log.i("AppLog", "3. setProfilePicture Done!")
     }
+
+    override suspend fun initCurrentUserDataCollection() {
+        Log.i("AppLog", "1. Init User Data Collection")
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            networkDataSource.initUserDataCollection(
+                NetworkFirebaseUser(
+                    uid = currentUser.uid,
+                    displayName = currentUser.displayName ?: "",
+                    profilePictureUri = currentUser.photoUrl.toString()
+                )
+            )
+        }
+        Log.i("AppLog", "2. Init User Data Collection Done!")
+    }
+
+
 }

@@ -25,7 +25,7 @@ class EditProfileViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _isRefreshing = MutableStateFlow(false)
-    val editProfileUiState = combine(_isRefreshing, userDataRepository.currentUser){
+    val editProfileUiState = combine(_isRefreshing, userDataRepository.getCurrentUser()){
             isRefreshing, currentUser -> EditProfileUiState.Data(isRefreshing, currentUser)
     }.stateIn(
         scope = viewModelScope,
