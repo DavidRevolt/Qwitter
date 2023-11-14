@@ -1,6 +1,5 @@
 package com.davidrevolt.feature.home
 
-import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidrevolt.qwitter.core.data.repository.TweetRepository
@@ -26,16 +25,6 @@ class HomeViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = HomeUiState.Loading
     )
-
-    fun snackbarMangerTest(msg:String){
-        viewModelScope.launch {
-            snackbarManager.snackbarHostState.showSnackbar(
-                message = msg,
-                actionLabel = null,
-                duration = SnackbarDuration.Short,
-            )
-        }
-    }
 
     fun tweetTest(content:String){
         viewModelScope.launch {

@@ -18,10 +18,12 @@ import com.davidrevolt.qwitter.core.data.utils.authentication.AuthenticationServ
 import com.davidrevolt.qwitter.core.data.utils.networkmonitor.NetworkMonitor
 import com.davidrevolt.qwitter.navigation.TopLevelDestination
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -54,7 +56,7 @@ class QwitterAppState(
     private val authenticationService: AuthenticationService,
     userDataRepository: UserDataRepository,
     val navController: NavHostController,
-    coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope
 ) {
 
     // Internet Connection
@@ -68,10 +70,14 @@ class QwitterAppState(
 
 
     // Fetch CurrentUser data from db only if authState[user is logged in] is true
-    val currentUser = authenticationService.authState().transform { authState ->
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val currentUser = authenticationService.authState().transformLatest { authState ->
         Log.i("AppLog", "AuthState is: $authState")
+
         when (authState) {
-            true -> { userDataRepository.getCurrentUser().collect { emit(it) }}
+            true -> {
+                userDataRepository.getCurrentUser().collect { emit(it) }
+            }
 
             false -> {
                 emit(null)
@@ -129,6 +135,13 @@ class QwitterAppState(
 
     }
 
+    fun signOut(){
+        coroutineScope.launch {
+            authenticationService.signOut()
+            onAuthStateChangeNavigation()
+        }
+
+    }
     /**
      * Clearing the whole backstack and then navigating to destination according to Auth state.
      * Not logged in -> navigate to Login screen.

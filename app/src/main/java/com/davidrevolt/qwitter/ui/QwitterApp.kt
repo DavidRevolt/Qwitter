@@ -1,7 +1,6 @@
 package com.davidrevolt.qwitter.ui
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -41,7 +39,6 @@ import com.davidrevolt.qwitter.core.designsystem.components.QwitterTopAppBar
 import com.davidrevolt.qwitter.core.editprofile.navigateToEditProfile
 import com.davidrevolt.qwitter.navigation.QwitterNavigation
 import com.davidrevolt.qwitter.navigation.TopLevelDestination
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -102,9 +99,8 @@ fun QwitterApp(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            val scope = rememberCoroutineScope()
             Button(
-                onClick = { scope.launch { authenticationService.signOut() } },
+                onClick = { appState.signOut() },
                 content = { Text("signOut") })
             QwitterNavigation(
                 appState = appState,
@@ -120,6 +116,8 @@ fun QwitterApp(
         }
     }
 }
+
+
 
 
 @Composable
