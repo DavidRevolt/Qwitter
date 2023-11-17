@@ -1,10 +1,14 @@
 package com.davidrevolt.feature.home
 
 
+import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,17 +33,17 @@ fun HomeScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
+            .fillMaxSize().padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (uiState) {
             is HomeUiState.Data -> {
                 val tweetTest = viewModel::tweetTest
-                Button(onClick = { tweetTest("Tweet Content") },content = { Text("Test Tweet") })
+                Button(onClick = { tweetTest("Tweet Content") }, content = { Text("Test Tweet") })
                 val data = (uiState as HomeUiState.Data)
                 HomeScreenContent(data.tweets)
             }
+
             is HomeUiState.Loading -> LoadingWheel()
         }
     }
@@ -47,9 +51,30 @@ fun HomeScreen(
 
 
 @Composable
-private fun HomeScreenContent(tweets:List<Tweet>){
+private fun HomeScreenContent(tweets: List<Tweet>) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+       // contentPadding = PaddingValues(start = 8.dp, end = 8.dp, bottom = 20.dp)
+    ) {
+        tweets.forEach { tweet ->
+            Log.d("AppLog", "$tweet")
+            item {
+                TweetDisplay(
+                    modifier = Modifier,
+                    displayName = "DisplayName",
+                    profilePictureUri = Uri.EMPTY,
+                    content = tweet.content,
+                    mediaUri = tweet.mediaUri,
+                    commentsCount = tweet.comments.size,
+                    likedByCount = tweet.likedBy.size,
+                    publishDate = tweet.publishDate
+                )
+            }
+        }
+    }
     TweetDisplay()
-    TweetDisplay()
-    TweetDisplay()
-    tweets.forEach{t->  Log.d("AppLog","${t}")}
+    tweets.forEach { t -> Log.d("AppLog", "${t}") }
 }
