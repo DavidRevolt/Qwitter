@@ -1,5 +1,6 @@
 package com.davidrevolt.qwitter.core.network
 
+import android.util.Log
 import com.davidrevolt.qwitter.core.network.model.NetworkFirebaseTweet
 import com.davidrevolt.qwitter.core.network.model.NetworkFirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,11 +22,17 @@ class QwitterNetworkDataSourceImpl @Inject constructor(private val firestore: Fi
     QwitterNetworkDataSource {
 
     override fun getAllTweets(): Flow<List<NetworkFirebaseTweet>> =
-        firestore.collection(TWEETS_COLLECTION).orderBy("publishDate", Query.Direction.DESCENDING)
+        firestore.collection(TWEETS_COLLECTION)
+            .orderBy("publishDate", Query.Direction.DESCENDING)
             .dataObjects()
 
-    override suspend fun createTweet(networkFirebaseTweet: NetworkFirebaseTweet) {
-        firestore.collection(TWEETS_COLLECTION).add(networkFirebaseTweet).await()
+    override suspend fun createTweet(userId: String, content: String, mediaUri: List<String>) {
+        val tweet = NetworkFirebaseTweet(
+            userId = userId, // Ref 2 user doc
+            content = content,
+            mediaUri = mediaUri
+        )
+        firestore.collection(TWEETS_COLLECTION).add(tweet).await()
     }
 
 
@@ -34,7 +41,8 @@ class QwitterNetworkDataSourceImpl @Inject constructor(private val firestore: Fi
     }
 
     override suspend fun getUser(uid: String): NetworkFirebaseUser? {
-        if(uid.isEmpty()) return null
+        Log.d("AppLog2","getUser with uid: $uid")
+        if (uid.isEmpty()) return null
         return firestore.collection(USERS_DATA_COLLECTION).document(uid).get().await().toObject()
     }
 

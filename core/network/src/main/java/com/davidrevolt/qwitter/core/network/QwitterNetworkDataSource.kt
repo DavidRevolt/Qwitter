@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface QwitterNetworkDataSource {
 
     fun getAllTweets(): Flow<List<NetworkFirebaseTweet>>
-    suspend fun createTweet(networkFirebaseTweet: NetworkFirebaseTweet)
+    suspend fun createTweet(userId:String, content: String, mediaUri: List<String>)
 
     /**
      * Fetch user data from DB.

@@ -4,8 +4,8 @@ import android.net.Uri
 import java.util.Date
 
 data class Tweet(
-    val id: String,
-    val userId: String,
+    val uid: String,
+    val user: User,
     val content: String,
     val mediaUri: List<Uri>,
     val comments: List<Tweet>,

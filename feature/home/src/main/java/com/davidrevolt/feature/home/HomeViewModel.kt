@@ -1,5 +1,6 @@
 package com.davidrevolt.feature.home
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidrevolt.qwitter.core.data.repository.TweetRepository
@@ -21,21 +22,23 @@ class HomeViewModel @Inject constructor(
 
     val homeUiState = tweetRepository.getAllTweets().map(HomeUiState::Data)
         .stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = HomeUiState.Loading
-    )
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = HomeUiState.Loading
+        )
 
 
-    fun tweetTest(content:String){
+    fun tweetTest(content: String) {
         viewModelScope.launch {
-            tweetRepository.createTweet(content)
+            tweetRepository.createTweet(content = content, mediaUri = listOf(Uri.parse("https://lh3.googleusercontent.com/a/ACg8ocITP-oW51ZcG_jZwF-qbjM2g6C1X00POiwCtIu1ORw8=s96-c")))
         }
     }
 }
 
 
 sealed interface HomeUiState {
-    data class Data(val tweets: List<Tweet>) : HomeUiState
+    data class Data(val tweets: List<Tweet>) :
+        HomeUiState
+
     object Loading : HomeUiState
 }

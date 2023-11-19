@@ -2,8 +2,6 @@ package com.davidrevolt.qwitter.core.designsystem.components
 
 import android.net.Uri
 import android.text.format.DateUtils
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import java.sql.Timestamp
@@ -34,7 +32,10 @@ fun TweetDisplay(
     likedByCount: Int = 20,
     publishDate: Date = Timestamp.from(Instant.now())
 ) {
-    Row(modifier = modifier.fillMaxWidth().border(BorderStroke(2.dp, Color.Red))) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
         // Profile Pic
         Column(
             verticalArrangement = Arrangement.Top,
@@ -42,22 +43,35 @@ fun TweetDisplay(
         ) {
             ImageLoader(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(end = 10.dp)
                     .clip(CircleShape)
-                    .size(35.dp), imgUri = profilePictureUri
+                    .size(45.dp), imgUri = profilePictureUri
             )
         }
 
 
         Column(modifier = Modifier.fillMaxWidth()) {
-            Row(modifier= Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(text = displayName, fontWeight = FontWeight.Bold)
                 Text(text = dateToTimeAgo(publishDate))
             }
             Row {
-                Text(text = content)
+                Column {
+                    Text(text = content)
+                    mediaUri.forEach { uri ->
+                        ImageLoader(
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(RectangleShape), imgUri = uri
+                        )
+                    }
+                }
+
             }
-            Row(modifier= Modifier.fillMaxWidth()) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "likes:$likedByCount comments:$commentsCount")
             }
         }
