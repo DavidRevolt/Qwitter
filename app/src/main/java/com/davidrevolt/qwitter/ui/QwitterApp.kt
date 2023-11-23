@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -16,9 +16,11 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -35,10 +37,12 @@ import com.davidrevolt.qwitter.core.data.utils.snackbarmanager.SnackbarManager
 import com.davidrevolt.qwitter.core.designsystem.components.ImageLoader
 import com.davidrevolt.qwitter.core.designsystem.components.QwitterBottomNavigationBar
 import com.davidrevolt.qwitter.core.designsystem.components.QwitterNavigationBarItem
+import com.davidrevolt.qwitter.core.designsystem.components.QwitterNavigationDrawer
 import com.davidrevolt.qwitter.core.designsystem.components.QwitterTopAppBar
 import com.davidrevolt.qwitter.core.editprofile.navigateToEditProfile
 import com.davidrevolt.qwitter.navigation.QwitterNavigation
 import com.davidrevolt.qwitter.navigation.TopLevelDestination
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -58,6 +62,8 @@ fun QwitterApp(
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
     val notConnectedMessage = stringResource(R.string.no_internet_connection)
     val currentUser by appState.currentUser.collectAsStateWithLifecycle()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(isOffline) {
         if (isOffline) {
@@ -67,57 +73,59 @@ fun QwitterApp(
             )
         }
     }
-    Scaffold(
-        topBar = {
-            if (appState.shouldShowAppBars) {
-                appState.currentTopLevelDestination?.let {
-                    QwitterTopBar(
-                        title = it.title,
-                        profilePictureUri = currentUser?.profilePictureUri,
-                        appState.navController::navigateToEditProfile
+    QwitterNavigationDrawer(
+        drawerState = drawerState,
+        profilePictureUri = currentUser?.profilePictureUri,
+        onProfilePictureClick = appState.navController::navigateToEditProfile,
+        onSignOutClick = appState::signOut
+    ) {
+        Scaffold(
+            topBar = {
+                if (appState.shouldShowAppBars) {
+                    appState.currentTopLevelDestination?.let {
+                        QwitterTopBar(
+                            title = it.title,
+                            profilePictureUri = currentUser?.profilePictureUri,
+                            onProfilePictureClick = {scope.launch { drawerState.open() }}
+                        )
+                    }
+                }
+            },
+            containerColor = Color.Transparent,
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            snackbarHost = {
+                SnackbarHost(snackbarHostState, modifier = Modifier.safeDrawingPadding())
+            },
+            bottomBar = {
+                if (appState.shouldShowAppBars) {
+                    QwitterBottomBar(
+                        destinations = appState.topLevelDestinations,
+                        onNavigateToDestination = appState::navigateToTopLevelDestination,
+                        currentDestination = appState.currentDestination,
                     )
                 }
             }
-        },
-        containerColor = Color.Transparent,
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        snackbarHost = {
-            SnackbarHost(snackbarHostState, modifier = Modifier.safeDrawingPadding())
-        },
-        bottomBar = {
-            if (appState.shouldShowAppBars) {
-                QwitterBottomBar(
-                    destinations = appState.topLevelDestinations,
-                    onNavigateToDestination = appState::navigateToTopLevelDestination,
-                    currentDestination = appState.currentDestination,
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                QwitterNavigation(
+                    appState = appState,
+                    onShowSnackbar = { message, action ->
+                        snackbarHostState.showSnackbar(
+                            message = message,
+                            actionLabel = action,
+                            duration = SnackbarDuration.Short,
+                        ) == SnackbarResult.ActionPerformed
+                    },
+                    authenticationService = authenticationService
                 )
             }
         }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            Button(
-                onClick = { appState.signOut() },
-                content = { Text("signOut") })
-            QwitterNavigation(
-                appState = appState,
-                onShowSnackbar = { message, action ->
-                    snackbarHostState.showSnackbar(
-                        message = message,
-                        actionLabel = action,
-                        duration = SnackbarDuration.Short,
-                    ) == SnackbarResult.ActionPerformed
-                },
-                authenticationService = authenticationService
-            )
-        }
     }
 }
-
-
 
 
 @Composable

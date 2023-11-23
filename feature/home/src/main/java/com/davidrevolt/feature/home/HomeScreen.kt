@@ -1,8 +1,6 @@
 package com.davidrevolt.feature.home
 
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -35,8 +32,7 @@ fun HomeScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (uiState) {
@@ -57,7 +53,6 @@ fun HomeScreen(
 private fun HomeScreenContent(tweets: List<Tweet>) {
     LazyColumn(
         modifier = Modifier
-            .border(BorderStroke(2.dp, Color.Red))
             .fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -65,7 +60,7 @@ private fun HomeScreenContent(tweets: List<Tweet>) {
         tweets.forEach { tweet ->
             item {
                 TweetDisplay(
-                   // modifier = Modifier.padding(bottom = 5.dp),
+                   modifier = Modifier.padding(start = 20.dp, end = 20.dp),
                     displayName = tweet.user.displayName,
                     profilePictureUri = tweet.user.profilePictureUri,
                     content = tweet.content,
@@ -74,7 +69,7 @@ private fun HomeScreenContent(tweets: List<Tweet>) {
                     likedByCount = tweet.likedBy.size,
                     publishDate = tweet.publishDate
                 )
-                Divider(modifier = Modifier.fillMaxWidth().padding(top = 5.dp, bottom = 5.dp))
+                Divider(modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp))
             }
         }
     }
