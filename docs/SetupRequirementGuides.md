@@ -1,7 +1,7 @@
 # Qwitter - Setup Requirement Guides
   
 ## Guides
-- [Add SHA-1 to android project]([https://developer.android.com/training/dependency-injection/hilt-jetpack](https://stackoverflow.com/questions/39144629/how-to-add-sha-1-to-android-application)).
+- [Add SHA-1 to android project](https://stackoverflow.com/questions/39144629/how-to-add-sha-1-to-android-application) - Add SHA-1 to android project.
 
 
 ## Setup Requirement
