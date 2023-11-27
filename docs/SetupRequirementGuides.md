@@ -5,14 +5,16 @@
 
 
 ## Firebase Storage rules example
-`storage rules
+```
+storage rules
 service firebase.storage {
   match /b/{bucket}/o {
     match /{allPaths=**} {
       allow read, write: if request.auth != null;
     }
   }
-}`
+}
+```
 
 ## Firebase Cloud Firestore rules example[Native mode]
 `service cloud.firestore {
