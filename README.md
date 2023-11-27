@@ -9,7 +9,7 @@ follows the [official architecture guidance](https://developer.android.com/jetpa
 
 ### Highlights
 * **MVVM** architecture.
-* * **Firebase** This app integrated with Firebase Auth, Firestore Database, Firebase Storage and Firebase Analytics.
+* **Firebase** This app integrated with Firebase Auth, Cloud Firestore, Firebase Storage and Firebase Analytics.
 * **Hilt** Dependency injection.
 * **WorkManger** executes sync job for keeping data up to date and showing status notification.
 * **ConnectivityManager** Monitoring network connections. 
@@ -27,4 +27,7 @@ follows the [official architecture guidance](https://developer.android.com/jetpa
 ## Installation
 To install **Qwitter**, follow these steps:
 1. Clone or download the project code from the repository.
-4. Build and run the app on an Android emulator or device.
+2. Create Firebase project [don't download the google-services.json file!].
+3. In Firebase console, enable: Authentication[with Google and SHA-1], Cloud Firestore and Firebase Storage, rules sample included here.
+4. Download and 
+5. Build and run the app on an Android emulator or device.
