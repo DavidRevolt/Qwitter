@@ -24,7 +24,7 @@ follows the [official architecture guidance](https://developer.android.com/jetpa
 - [Google Accompanist](https://github.com/google/accompanist) - Android runtime permissions support.
 - [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager) - Schedule sync task.
 
-## Installation
+## Setup Requirement
 To install **Qwitter**, follow these steps:
 1. Clone or download the project code from the repository.
 2. Create Firebase project [don't download the google-services.json file!].
