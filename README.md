@@ -1,6 +1,7 @@
 # Qwitter - Twitter Clone [Firebase integrated]
 **Qwitter** is a Android app built entirely with Kotlin and Jetpack Compose, It
 follows the [official architecture guidance](https://developer.android.com/jetpack/guide) as closely as possible.
+**THIS APP IS A WORK IN PROGRESS**
 
 ### Features
 *   Registered users can post text and images.
@@ -29,6 +30,6 @@ To install **Qwitter**, follow these steps:
 1. Clone or download the project code from the repository.
 2. Create Firebase project [don't download the google-services.json file!].
 3. In Firebase console, enable: Authentication[with Google and SHA-1], Cloud Firestore and Firebase Storage,
-  rules sample and how to add SHA-1 HERE.
+  - [rules sample and how to add SHA-1](https://github.com/DavidRevolt/Qwitter/blob/master/docs/SetupRequirementGuides.md).
 5. Download and place google-services.json file in App module.
 6. Build and run the app on an Android emulator or device.
