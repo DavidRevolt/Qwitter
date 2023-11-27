@@ -17,7 +17,7 @@ service firebase.storage {
 ```
 
 ## Firebase Cloud Firestore rules example
-To write rules go to Cloud Firestore console and press >Switch from Datastore mode to Native mode 
+To write rules go to Cloud Firestore console and press "Switch from Datastore mode to Native mode".
 ```
 service cloud.firestore {
   match /databases/{database}/documents {
