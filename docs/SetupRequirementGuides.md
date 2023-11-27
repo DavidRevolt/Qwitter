@@ -17,10 +17,12 @@ service firebase.storage {
 ```
 
 ## Firebase Cloud Firestore rules example[Native mode]
-`service cloud.firestore {
+```
+service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
       allow read, write: if request.auth != null;
     }
   }
-}`
+}
+```
